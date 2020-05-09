@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody,
     CardTitle, Breadcrumb, BreadcrumbItem,Button, Modal, ModalHeader, ModalBody,
      Label,Row, Col} from 'reactstrap';
-    
+import { Loading } from './LoadingComponent';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 const required = (val) => val && val.length;
@@ -118,7 +118,7 @@ function RenderComments({comment, addComment, dishId}) {
         };
     }
 function   RenderDish({dish}) {
-        if (dish != null)
+       
             return(
               <div className='col-12 col-md-5 m-1'>
                 <Card>
@@ -133,14 +133,28 @@ function   RenderDish({dish}) {
                 
             </div>
             );
-        else
-            return(
-                <div></div>
-            );
     }
 
     const DishDetail= (props)=>{
-
+        if (props.isLoading) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (props.errMess) {
+            return(
+                <div className="container">
+                    <div className="row">            
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            );
+        }
+        else if (props.dish != null) {
         return (
             <div className="container">
             <div className="row">
@@ -161,5 +175,6 @@ function   RenderDish({dish}) {
                 </div>
             </div>
         );
+        }
 }
 export default DishDetail;
