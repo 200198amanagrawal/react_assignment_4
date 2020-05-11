@@ -182,3 +182,49 @@ export const addLeaders = (leaders) => ({
     type: ActionTypes.ADD_LEADERS,
     payload: leaders
 });
+
+//adding the feeback
+
+// the feedback is taken from the API
+export const postFeedback = (firstname,lastname,telnum,email,agree,contactType,message) => (dispatch) => {
+//tha above params can be used as ...values
+//one more important thing the id is auto assignerd so no need to add it.
+  const newFeedback = {
+      firstname: firstname,
+      lastname: lastname,
+      telnum: telnum,
+      email: email,
+      agree: agree,
+      contactType: contactType,
+      message: message,
+  };
+  newFeedback.date = new Date().toISOString();
+  return fetch(baseUrl + 'feedback', {
+      method: "POST",// the follwing code posts the newcomment to the API and then fetches it.
+      body: JSON.stringify(newFeedback),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "same-origin"
+  })
+  .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        var error = new Error('Error ' + response.status + ': ' + response.statusText);
+        error.response = response;
+        throw error;
+      }
+    },
+    error => {
+          throw error;
+    })
+  .then(response => response.json())//here the response is recieved as json and then processed further.
+  .then(response => {
+    alert("Thank you for your feedback! \n" + JSON.stringify(response));
+  })//here the response is used and shown as result.
+  .catch(error =>  {
+       console.log('post feedbacks', error.message); 
+      alert('Your feedback could not be posted\nError: '+error.message); 
+  });
+};
